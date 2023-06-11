@@ -1,12 +1,19 @@
-FROM mcr.microsoft.com/dotnet/sdk:6.0-alpine as build
-
+FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
+EXPOSE 80
+
+FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
+WORKDIR /src
+COPY ["Nagp.UserInfo/Nagp.UserInfo.csproj", "Nagp.UserInfo/"]
+RUN dotnet restore "Nagp.UserInfo/Nagp.UserInfo.csproj"
 COPY . .
-RUN dotnet restore
-RUN dotnet publish -o /app/published-app
+WORKDIR "/src/Nagp.UserInfo"
+RUN dotnet build "Nagp.UserInfo.csproj" -c Release -o /app/build
 
-FROM mcr.microsoft.com/dotnet/aspnet:6.0-alpine as runtime
+FROM build AS publish
+RUN dotnet publish "Nagp.UserInfo.csproj" -c Release -o /app/publish
+
+FROM base AS final
 WORKDIR /app
-COPY --from=build /app/published-app /app
-EXPOSE 48541
-ENTRYPOINT [ "dotnet", "/app/Nagp.UserInfo.dll" ]
+COPY --from=publish /app/publish
+ENTRYPOINT ["dotnet", "Nagp.UserInfo.dll"]
