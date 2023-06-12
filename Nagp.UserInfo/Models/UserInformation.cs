@@ -15,5 +15,5 @@ public partial class UserInformation
 
     public string? Gender { get; set; }
 
-    public long? Mobile { get; set; }
+    public long? MobileNo { get; set; }
 }
