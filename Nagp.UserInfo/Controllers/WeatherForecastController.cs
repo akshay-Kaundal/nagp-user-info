@@ -21,11 +21,13 @@ namespace Nagp.UserInfo.Controllers
         [HttpGet]
         public IEnumerable<WeatherForecast> Get()
         {
+            //var variable = Environment.GetEnvironmentVariable("Db_Password");
             return Enumerable.Range(1, 5).Select(index => new WeatherForecast
             {
                 Date = DateTime.Now.AddDays(index),
                 TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+                Summary = Summaries[Random.Shared.Next(Summaries.Length)],
+                Env_variable = Environment.GetEnvironmentVariable("DB_PASSWORD_ENV")
             })
             .ToArray();
         }
