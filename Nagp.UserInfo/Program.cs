@@ -4,11 +4,12 @@ using Nagp.UserInfo.Models;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-var db_Password_Env = Environment.GetEnvironmentVariable("DB_PASSWORD_ENV");
-var db_Server_Name_Env = Environment.GetEnvironmentVariable("SERVER_NAME_ENV");
-//var db_Port_No_Env = Environment.GetEnvironmentVariable("PORT_NO_ENV");
+var dbPasswordEnv = Environment.GetEnvironmentVariable("DB_PASSWORD_ENV");
+var dbServerNameEnv = Environment.GetEnvironmentVariable("SERVER_NAME_ENV");
+var userNameEnv = Environment.GetEnvironmentVariable("USER_NAME_ENV");
+var databaseNameEnv = Environment.GetEnvironmentVariable("DATABASE_NAME_ENV");
 var connectionString = builder.Configuration.GetConnectionString("NagpUserDB");
-var finalConnString = string.Format(connectionString, db_Server_Name_Env, db_Password_Env);
+var finalConnString = string.Format(connectionString, dbServerNameEnv, databaseNameEnv, userNameEnv, dbPasswordEnv);
 builder.Services.AddDbContext<NagpUserDbContext>(option =>
 option.UseSqlServer(finalConnString)
 );

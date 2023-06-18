@@ -19,7 +19,9 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "DB_PASSWORD_ENV": "my password",
         "SERVER_NAME_ENV": ".",
-        "PORT_NO_ENV": ""
+        "DATABASE_NAME_ENV": "MyDB",
+        "USER_NAME_ENV": "MyUser"
+
       }
     },
     "IIS Express": {
