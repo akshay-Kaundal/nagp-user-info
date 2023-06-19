@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+ name: pvc-sc-ldf-userinfo
+spec:
+ storageClassName: gcp-storage-class-userinfo
+ accessModes:
+  - ReadWriteOnce
+ resources:
+  requests:
+   storage: 50Gi

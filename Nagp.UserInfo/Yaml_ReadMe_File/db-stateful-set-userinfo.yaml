@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+ name: userinfo-app-db
+spec:
+ serviceName: db-headless-service-userinfo
+ replicas: 1
+ selector:
+  matchLabels:
+   app: userinfo-db
+ template:
+  metadata:
+   name: userinfo-db
+   labels:
+    app: userinfo-db
+  spec:
+   terminationGracePeriodSeconds: 10
+   securityContext:
+    fsGroup: 1000
+   containers:
+    - name: userinfo-db-container
+      image: mcr.microsoft.com/mssql/server
+      ports:
+      - containerPort: 1443
+      env:
+      - name: MSSQL_PID
+        value: "Enterprise"
+      - name: ACCEPT_EULA
+        value: "Y"
+      - name: SA_PASSWORD
+        valueFrom:
+         secretKeyRef:
+          name: secret-userinfo
+          key: DB_PASSWORD
+      - name: MSSQL_DATA_DIR
+        value: /var/opt/mssql/mdf
+      - name: MSSQL_LOG_DIR
+        value: /var/opt/mssql/ldf
+      volumeMounts:
+      - name: mssql-base-volume
+        mountPath: /var/opt/mssql
+      - name: mssql-ldf-volume
+        mountPath: /var/opt/mssql/ldf
+      - name: mssql-mdf-volume
+        mountPath: /var/opt/mssql/mdf
+   volumes:
+   - name: mssql-base-volume
+     persistentVolumeClaim:
+      claimName: pvc-sc-base-userinfo
+   - name: mssql-mdf-volume
+     persistentVolumeClaim:
+      claimName: pvc-sc-mdf-userinfo
+   - name: mssql-ldf-volume
+     persistentVolumeClaim:
+      claimName: pvc-sc-ldf-userinfo
